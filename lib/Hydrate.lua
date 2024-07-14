@@ -31,30 +31,38 @@ end
 function HandleProps(element)
     local props = element.props
 
+    element._object = Instance.new(element.className)
+
     for i, v in pairs(props) do
         if type(i) == "table" and i.Type ~= nil then
             HandleEvents(element._object, i, v, element._events)
+        elseif type(i) == "string" and i:lower() == "children" then
+            continue
         else
             element._object[i] = v
         end
-
     end
-end
 
-function HandleObject(node)
-    HandleProps(node)
-    return node
+    if element.children then
+        for i, v in pairs(element.children) do
+            HandleProps(v)
+            v._object.Parent = element._object
+        end
+    end
+
+    return element
 end
 
 return function (node, path)
-    return Promise.new(function(resolve)
-        local handleObject = HandleObject(node)
+    local handleObject = HandleProps(node)
 
-        if handleObject._object then
-            handleObject._object.Parent = path
-        end
+    if handleObject._object then
+        handleObject._object.Parent = path
+    end
 
-        print("Hydration Complete!")
-        resolve(handleObject)
-    end)
+    return {
+        mounted = true,
+        node = handleObject,
+        path = path,
+    }
 end

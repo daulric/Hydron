@@ -1,10 +1,13 @@
 return function (class)
     return function (props)
+        if type(class) == "function" then
+            return class(props)
+        end
+
         local node = {
             className = class,
             props = props,
-            children = props.children or {},
-            _object = Instance.new(class),
+            children = props.children,
             _events = {},
         }
 
