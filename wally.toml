@@ -1,8 +1,8 @@
 [package]
 name = "daulric/hydron"
-version = "0.1.0"
+version = "0.0.2"
 registry = "https://github.com/UpliftGames/wally-index"
+description = "A Server-Side library for creating and mantaining objects on the server"
 realm = "shared"
 
 [dependencies]
-promise = "evaera/promise@4.0.0"

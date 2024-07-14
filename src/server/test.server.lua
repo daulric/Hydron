@@ -1,6 +1,8 @@
 local Players = game:GetService("Players")
 local Hydron = require(game.ReplicatedStorage.Hydron)
 
+local PartRef = Hydron.useRef()
+
 function Image(props)
     return Hydron.Create "Part" {
         Name = props.name,
@@ -11,6 +13,9 @@ end
 
 local element = Hydron.Create "Part" {
     Name = "TestGui",
+
+    [Hydron.Ref] = PartRef,
+
     [Hydron.Event.Touched] = function(object)
         print(object.Name)
     end,
@@ -49,8 +54,25 @@ local element = Hydron.Create "Part" {
     }
 }
 
+local upgradedElement = Hydron.Create "Part" {
+    Name = "Updated Part",
+
+    children = {
+        Decon = Hydron.Create(Image) {
+            name = "Update Event Part",
+            touched = function(object)
+                print(object, "updated!")
+            end
+        }
+    }
+}
+
 local mounted = Hydron.Hydrate(element, workspace)
+print(PartRef.current)
+
 task.wait(10)
-Hydron.Dehydrate(mounted)
+mounted = Hydron.Update(mounted, upgradedElement)
+print("New Mounted:", mounted)
+--[[Hydron.Dehydrate(mounted)
 task.wait(5)
-Hydron.Hydrate(element, workspace)
+Hydron.Hydrate(element, workspace)]]

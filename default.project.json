@@ -1,0 +1,6 @@
+{
+    "name": "hydron",
+    "tree": {
+        "$path": "lib"
+    }
+}

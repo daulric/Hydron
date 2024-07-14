@@ -1,4 +1,4 @@
-local Players = game:GetService("Players")
+local ref = require(script.Parent:WaitForChild("Ref")).Ref
 
 function DestroyNodes(node)
     for i, v in pairs(node.children) do
@@ -6,8 +6,14 @@ function DestroyNodes(node)
             DestroyNodes(v)
         end
 
+        if v.props[ref] then
+            v.props[ref].current = nil
+            v.props[ref].isRefed = false
+        end
+
         if v._object then
             v._object.Parent = nil
+            v._events = {}
             task.wait()
             v._object:Destroy()
         end
@@ -15,6 +21,11 @@ function DestroyNodes(node)
         if v._parent then
             v._parent = nil
         end
+    end
+
+    if node.props[ref] then
+        node.props[ref].current = nil
+        node.props[ref].isRefed = false
     end
 
     node._parent = nil
@@ -25,6 +36,7 @@ end
 return function (mountedNode)
     if mountedNode.mounted == true then
         DestroyNodes(mountedNode.node)
+        mountedNode.path = nil
         mountedNode.mounted = nil
     end
 end

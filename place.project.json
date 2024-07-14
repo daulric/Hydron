@@ -6,7 +6,7 @@
     "ReplicatedStorage": {
 
       "Hydron": {
-        "$path": "lib"
+        "$path": "default.project.json"
       },
 
       "Shared": {

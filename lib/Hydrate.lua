@@ -1,5 +1,6 @@
 local EventAttributes = require(script.Parent:WaitForChild("Event"))
 local Promise = require(script.Parent:WaitForChild("promise"))
+local Refer = require(script.Parent:WaitForChild("Ref"))
 
 function HandleEvents(object: Instance, event: {eventName: string, Type: string}, func: (...any) -> (), _eventLogs: { [string]: RBXScriptConnection })
 
@@ -36,6 +37,9 @@ function HandleProps(element)
     for i, v in pairs(props) do
         if type(i) == "table" and i.Type ~= nil then
             HandleEvents(element._object, i, v, element._events)
+        elseif i == Refer.Ref then
+            v.current = element._object
+            v.isRefed = true
         elseif type(i) == "string" and i:lower() == "children" then
             continue
         else
